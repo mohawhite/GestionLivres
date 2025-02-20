@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bibliothèque Entrepreneuriale</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#"><i class="bi bi-book me-2"></i>Bibliothèque Entrepreneuriale</a>
+    </div>
+</nav>
+
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1 class="mb-4">Livres pour entrepreneurs</h1>
+            <p class="lead">Découvrez notre sélection de livres incontournables pour développer votre entreprise.</p>
+        </div>
+        <div class="col-md-6 d-flex align-items-center justify-content-md-end">
+            <div class="input-group w-75">
+                <select id="category-filter" class="form-select">
+                    <option value="">Toutes les catégories</option>
+                    <option value="Entrepreneuriat">Entrepreneuriat</option>
+                    <option value="Finance Personnelle">Finance Personnelle</option>
+                    <option value="Startups">Startups</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="Développement Personnel">Développement Personnel</option>
+                    <option value="Productivité">Productivité</option>
+                    <option value="Stratégie">Stratégie</option>
+                    <option value="Vente">Vente</option>
+                    <option value="Négociation">Négociation</option>
+                    <option value="Business">Business</option>
+                    <option value="Psychologie">Psychologie</option>
+                </select>
+                <button id="filter-button" class="btn btn-primary">Filtrer</button>
+            </div>
+            <button id="add-book-btn" class="btn btn-success ms-2" data-bs-toggle="modal" data-bs-target="#addBookModal">
+                <i class="bi bi-plus-lg"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="alert-container"></div>
+
+    <div class="row" id="book-list">
+        <!-- Les livres seront affichés ici dynamiquement -->
+        <div class="col-12 text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Chargement...</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour ajouter un livre -->
+<div class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="addBookModalLabel">Ajouter un livre</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="add-book-form">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Titre*</label>
+                        <input type="text" class="form-control" id="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="author" class="form-label">Auteur*</label>
+                        <input type="text" class="form-control" id="author" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Catégorie*</label>
+                        <select class="form-select" id="category" required>
+                            <option value="" disabled selected>Sélectionner une catégorie</option>
+                            <option value="Entrepreneuriat">Entrepreneuriat</option>
+                            <option value="Finance Personnelle">Finance Personnelle</option>
+                            <option value="Startups">Startups</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Développement Personnel">Développement Personnel</option>
+                            <option value="Productivité">Productivité</option>
+                            <option value="Stratégie">Stratégie</option>
+                            <option value="Vente">Vente</option>
+                            <option value="Négociation">Négociation</option>
+                            <option value="Business">Business</option>
+                            <option value="Psychologie">Psychologie</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="publication_year" class="form-label">Année de publication</label>
+                        <input type="number" class="form-control" id="publication_year" min="1900" max="2025">
+                    </div>
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Prix (€)</label>
+                        <input type="number" class="form-control" id="price" step="0.01" min="0">
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-success" id="submit-book">Ajouter</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmation de suppression -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Confirmer la suppression</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer ce livre ?</p>
+                <h5 id="book-to-delete-title" class="font-weight-bold mt-3"></h5>
+                <p class="text-muted" id="book-to-delete-author"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete">Supprimer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="bg-dark text-white text-center py-3 mt-5">
+    <div class="container">
+        <p class="mb-0">Bibliothèque Entrepreneuriale &copy; 2025</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
